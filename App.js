@@ -8,20 +8,60 @@ import codePush from 'react-native-code-push';
 
 const Stack = createStackNavigator();
 
-
+const updateDialogOptions = {
+  updateTitle: "Cập nhật ứng dụng",
+  optionalUpdateMessage: "Một bản cập nhật đã sẵn sàng, cài đặt ngay?",
+  optionalIgnoreButtonLabel: "Huỷ",
+  optionalInstallButtonLabel: "Cập nhật",
+}
 const codePushOptions = {
   checkFrequency: codePush.CheckFrequency.ON_APP_START,
-  updateDialog: true,
+  updateDialog: updateDialogOptions,
   installMode: codePush.InstallMode.IMMEDIATE,
+}
+
+const onSyncStatusChange = (SyncStatus) => {
+  switch (SyncStatus) {
+    case SyncStatus.CHECKING_FOR_UPDATE:
+      // Show "Checking for update" notification
+      Toast.showWithGravity('Đang kiểm tra cập nhật...', Toast.SHORT, Toast.BOTTOM);
+      break;
+    case SyncStatus.AWAITING_USER_ACTION:
+      // Show "Checking for update" notification
+      Toast.showWithGravity('Đợi người dùng xác nhận...', Toast.SHORT, Toast.BOTTOM);
+      break;
+    case SyncStatus.DOWNLOADING_PACKAGE:
+      // Show "downloading" notification
+      Toast.showWithGravity('Đang tải bản cập nhật...', Toast.SHORT, Toast.BOTTOM);
+      break;
+    case SyncStatus.INSTALLING_UPDATE:
+      // Show "installing" notification
+      Toast.showWithGravity('Đang cài bản cập nhật...', Toast.SHORT, Toast.BOTTOM);
+      break;
+  }
+}
+const onError = (error) => {
+  console.log("An error occurred. " + error);
+  Toast.showWithGravity('Lỗi khi cập nhật: ' + error);
+}
+const onDownloadProgress = (downloadProgress) => {
+  if (downloadProgress) {
+    console.log("Downloading " + downloadProgress.receivedBytes + " of " + downloadProgress);
+    Toast.showWithGravity("Downloading " + downloadProgress.receivedBytes + " of " + downloadProgress,
+      Toast.SHORT, Toast.BOTTOM);
+  }
 }
 function App(props) {
   const navigation = props.navigation;
   const [loading, setLoading] = useState(true);
+  const [deviceToken, setDeviceToken] = useState();
   const [initialRoute, setInitialRoute] = useState('Home');
+  const [restartAllowed, setRestartAllowed] = useState(true);
 
   const setupFCM = async () => {
     let token = await messaging().getToken();
     console.log('Device token: ', token)
+    setDeviceToken(token)
 
     const authStatus = await messaging().requestPermission();
     const enabled =
@@ -33,11 +73,8 @@ function App(props) {
     }
   }
 
+
   useEffect(() => {
-    // codePush.sync({
-    //   updateDialog: true,
-    //   installMode: codePush.InstallMode.ON_NEXT_RESUME,
-    // });
 
     setupFCM();
 
@@ -62,7 +99,7 @@ function App(props) {
         setLoading(false);
       });
 
-  }, []);
+  }, [restartAllowed]);
 
   if (loading) {
     return null;
@@ -71,8 +108,8 @@ function App(props) {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName={initialRoute}>
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Settings" component={SettingScreen} />
+        <Stack.Screen name="Home" component={HomeScreen}  />
+        <Stack.Screen name="Settings" component={SettingScreen} initialParams={{ deviceToken: deviceToken }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

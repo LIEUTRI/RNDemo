@@ -5,7 +5,11 @@ import {
     View,
 } from 'react-native';
 
-const SettingScreen = () => {
+const SettingScreen = ({navigation, route}) => {
+    const { deviceToken } = route.params
+    React.useEffect(() => {
+        console.log('device token => ', deviceToken)
+    }, []);
     return (
         <SafeAreaView>
             <View>

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "945229730290",
+    "project_id": "demonotification-e9faf",
+    "storage_bucket": "demonotification-e9faf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:945229730290:android:94135a068364bc35891b6b",
+        "android_client_info": {
+          "package_name": "com.demo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "945229730290-il3288vq3nm60aohbbpuou6s5qr9f7tb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9adGgH1K33L8RNHyx1raaQCqocu9FQx4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "945229730290-il3288vq3nm60aohbbpuou6s5qr9f7tb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
